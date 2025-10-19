@@ -1,11 +1,13 @@
 from airflow.decorators import dag, task
 from airflow.operators.python import PythonOperator
+from airflow.datasets import Dataset
 from datetime import datetime, timedelta
-from dags.extractor import DATASET_COCKTAIL
 
-@dag(start_date=datetime(2025, 10, 15),
+DATASET_COCKTAIL = Dataset("/tmp/random_cocktail.json")
+
+@dag(start_date=datetime(2025, 10, 10),
      schedule=[DATASET_COCKTAIL], # schedule based on dataset availability
-     catchup=True, # do not backfill. Only run from start_date onward
+     catchup=False, # do not backfill. Only run from start_date onward
      description='ETL DAG for e-commerce data',
      tags=['ecom'],
      default_args={'owner': 'airflow', 'retries': 1},  # Define default arguments for all tasks in the DAG
